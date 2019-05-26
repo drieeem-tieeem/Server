@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+
+  <script type="text/javascript" src="javascript/newpill.js"></script>
+  
+    <meta charset="utf-8">
+  
+    <title>PD Pal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='node_modules/dragula/dist/dragula.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/draganddrop.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+  <ul>
+    <li><a href="{{ url_for('pillbox.calendar') }}"><img src="{{ url_for('static', filename='icons/calendar.png') }}"/></a></li>
+    <li><a href="{{ url_for('pillbox.index') }}"><img src="{{ url_for('static', filename='icons/pill.png') }}"/></a></li>
+    <li><a href="{{ url_for('pillbox.quiz') }}"><img src="{{ url_for('static', filename='icons/quiz.png') }}"/></a></li>
+    <li><a href="{{ url_for('pillbox.settings') }}"><img src="{{ url_for('static', filename='icons/settings.png') }}"/></a></li>
+  </ul>
+
+  {% block content %}{% endblock %}
+
+</body>
+
+
+</html>

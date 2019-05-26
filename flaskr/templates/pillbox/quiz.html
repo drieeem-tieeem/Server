@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div class="grid">
+    <form>
+    <div class="grid-one">
+
+        <p>Rate the intensity of tremors you have experienced in the past seven days</p>
+        <div class="slidecontainer">
+          <input type="range" min="0" max="10" value="5" class="slider" id="tremorRange">
+          <p>
+            Intensity: <span id="tremors"></span>
+          </p>
+        </div>
+    <script>
+    var slider = document.getElementById("tremorRange");
+    var output1 = document.getElementById("tremors");
+    output1.innerHTML = slider.value;
+
+    slider.oninput = function() {
+      output1.innerHTML = this.value;
+    }
+
+    slider.onmouseup = function () {
+      document.getElementById("form").submit();
+    }
+    </script>
+    </div>
+
+    <div class="grid-two">
+      <p>Rate the rigidity of your muscles in the past seven days</p>
+      <div class="slidecontainer">
+      <input type="range" min="0" max="10" value="5" class="slider" id="rigidityRange">
+      <p>Rigidity: <span id="rigidity"></span></p>
+    </div>
+    <script>
+    var slider = document.getElementById("rigidityRange");
+    var output2 = document.getElementById("rigidity");
+    output2.innerHTML = slider.value;
+
+    slider.oninput = function() {
+    output2.innerHTML = this.value;
+    }
+    </script>
+    </div>
+    <div class="grid-three">
+      <p>Rate how slowed your movement has felt in the last seven days</p>
+      <div class="slidecontainer">
+      <input type="range" min="0" max="10" value="5" class="slider" id="movementRange">
+      <p>Slowed Movement: <span id="movement"></span></p>
+    </div>
+    <script>
+    var slider = document.getElementById("movementRange");
+    var output3 = document.getElementById("movement");
+    output3.innerHTML = slider.value;
+
+    slider.oninput = function() {
+    output3.innerHTML = this.value;
+    }
+    </script>
+    </div>
+
+    <div class="grid-four">
+      <p>Rate your sense of balance in the last seven days</p>
+      <div class="slidecontainer">
+      <input type="range" min="0" max="10" value="5" class="slider" id="balanceRange">
+      <p>Balance: <span id="balance"></span></p>
+    </div>
+    <script>
+    var slider = document.getElementById("balanceRange");
+    var output4 = document.getElementById("balance");
+    output4.innerHTML = slider.value;
+
+    slider.oninput = function() {
+    output4.innerHTML = this.value;
+    }
+    </script>
+    </div>
+
+    <div class="grid-five">
+      <p>Rate how you felt your speech has been impeded in the last seven days</p>
+      <div class="slidecontainer">
+      <input type="range" min="0" max="10" value="5" class="slider" id="speechRange">
+      <p>Speech Impedence: <span id="speech"></span></p>
+    </div>
+    <script>
+    var slider = document.getElementById("speechRange");
+    var output5 = document.getElementById("speech");
+    output5.innerHTML = slider.value;
+
+    slider.oninput = function() {
+    output5.innerHTML = this.value;
+    }
+    </script>
+    </div>
+
+    <div class="grid-six">
+      <p>Rate your overall (sitting + standing) posture in the last seven days</p>
+      <div class="slidecontainer">
+      <input type="range" min="0" max="10" value="5" class="slider" id="postureRange">
+      <p>Posture: <span id="posture"></span></p>
+    </div>
+    <script>
+    var slider = document.getElementById("postureRange");
+    var output6 = document.getElementById("posture");
+    output6.innerHTML = slider.value;
+
+    slider.oninput = function() {
+    output6.innerHTML = this.value;
+    }
+    </script>
+    </div>
+
+      <input type="submit" name="send">
+    </form>
+
+  </div>
+
+ {% endblock %}

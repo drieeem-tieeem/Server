@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3> YOUR PILLBOX ! </h3>
+  <h4> ★ next dosage: </h4>
+
+
+  <div class="grid-container">
+  {% for box in pillbox %}
+    <div class="grid-item">
+      <p> {{ box.name }} </p>
+      <hr>
+    </div>
+  {% endfor %}
+  {% for box in pillbox %}
+    <div class="grid-item">
+      {% for collection in box['pills'] %}
+        {% for pill in collection.pills %}
+        <div class="row">
+          <p class="timelabel">
+            {{ collection.time }}
+          </p>
+          <div>
+              <div class="column" style="float: left;">
+                <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable">
+              </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% endfor %}
+      <p> </p>
+    </div>
+
+  {% endfor %}
+  
+  </div>
+
+  <script src="{{ url_for('static', filename='javascript/dragula.js') }}"></script>
+  <script src="{{ url_for('static', filename='javascript/draganddrop.js') }}"></script>
+
+  <div class="pill-container">
+  <div class="grid-content">
+    <h6>
+      <img src ="{{ url_for('static', filename='images/sinemet_white.png') }}" style ="align: left">
+      <br>
+      SINEMET
+   </h6>
+  </div>
+  <div class="grid-content">
+    <h6>
+      <img src ="{{ url_for('static', filename='images/tasmar_white.png') }}" style ="align: left">
+      <br>
+      TASMAR
+    </h6>
+  </div>
+  <div class="grid-content">
+
+  </div>
+  <div class="grid-content">
+    <div id="contact">
+      <img src="{{ url_for('static', filename='images/newpill.png') }}" style ="align: right">
+      New Pill
+    </div>
+
+    <div id="contactForm">
+
+      <h1>Add New Pill</h1>
+      <small>I'll get back to you as quickly as possible</small>
+
+      <form action="#">
+        <input placeholder="Name" type="text" required />
+        <input placeholder="Email" type="email" required />
+        <input placeholder="Subject" type="text" required />
+        <textarea placeholder="Comment"></textarea>
+        <input class="formBtn" type="submit" />
+        <input class="formBtn" type="reset" />
+      </form>
+    </div>
+  </div>
+  <div class="grid-content">
+    <h6>
+      <img src ="{{ url_for('static', filename='images/mirapex_white.png') }}" style ="align: left">
+      <br>
+      MIRAPEX
+    </h6>
+  </div>
+  <div class="grid-content">
+    <h6>
+      <img src ="{{ url_for('static', filename='images/azilect_white.png') }}" style ="align: left">
+      <br>
+      AZILECT
+    </h6>
+  </div>
+
+{% endblock %}
