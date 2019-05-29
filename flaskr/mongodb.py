@@ -18,6 +18,10 @@ def get_users():
   db = get_db()
   return db['users']
 
+def get_pills():
+  db = get_db()
+  return db['pills']
+
 def close_db():
   return
 

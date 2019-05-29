@@ -11,10 +11,12 @@ from bson.objectid import ObjectId
 
 bp = Blueprint('pillbox', __name__)
 
+
 @bp.route('/')
 def index():
     user_id = session.get('user_id')
     if user_id:
+        print(user_id)
         db = get_db()
         pills = db['pills']
         users =  db['users']

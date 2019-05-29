@@ -8,6 +8,7 @@ days_of_the_week = [
   'saturday'
 ]
 
+pill_schema = ['name', 'description', 'icon']
 
 # attempt to create 30min time slots daily
 pillbox_day_template = [
