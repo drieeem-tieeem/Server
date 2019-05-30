@@ -7,6 +7,7 @@ from flaskr.auth import login_required
 from flaskr.pillbox import join_pillbox
 from flaskr.mongodb import get_db, get_users, get_pills
 from flaskr.schema import days_of_the_week
+from test import update_users_schema, seed_random_pillbox
 import json
 from bson.objectid import ObjectId
 
@@ -15,6 +16,12 @@ from datetime import datetime, date, time, timedelta
 user_id_str = '5cc956a49a161a065410a707'
 bp = Blueprint('api', __name__, url_prefix='/api')
 
+@bp.route('/test/seed', methods=['GET'])
+def seed_user():
+    update_users_schema()
+    seed_random_pillbox('curtis')
+    return "User curtis data reset."
+    
 @bp.route('/test', methods=['POST'])
 def test():
     #user_id = session.get('user_id')
