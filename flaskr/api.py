@@ -13,7 +13,9 @@ from bson.objectid import ObjectId
 
 from datetime import datetime, date, time, timedelta
 
-user_id_str = '5cc956a49a161a065410a707'
+#user_id_str = '5cc956a49a161a065410a707'
+user_id_str = str(get_users().find_one()['_id'])
+
 bp = Blueprint('api', __name__, url_prefix='/api')
 
 @bp.route('/test/seed', methods=['GET'])
@@ -26,6 +28,7 @@ def seed_user():
         user['username'] = username
         user['password'] = 'pbkdf2:sha256:150000$jkwApNq5$6f2ee74568769791931a005c506afb2e585266373065a7f843977b9cdff38bad'
         get_users().insert(user)
+        
     update_users_schema()
     seed_random_pillbox(username)
     return "User curtis data reset."
