@@ -8,6 +8,7 @@ from flaskr.mongodb import get_db, get_users
 from flaskr.schema import days_of_the_week
 import json
 from bson.objectid import ObjectId
+import time
 
 bp = Blueprint('pillbox', __name__)
 
@@ -57,11 +58,14 @@ def join_pillbox(pillbox_list, days=days_of_the_week):
 
     for day, name in enumerate(days):
         day = pillbox_list[day]
-        for collection in day:
-            pills = collection['pills']
-            for index, pill in enumerate(pills):
-                pill_obj = db['pills'].find_one(pill)
-                pills[index] = pill_obj
-        data = { 'name': name, 'pills': day }
+        for index, pill in enumerate(day):
+            pill_obj = db['pills'].find_one( pill['pill_id'] )
+            pill_obj['time'] = pill['time']
+            day[index] = pill_obj
+
+        #sorted_day = sorted( (time.strptime(pill['time'], "%H:%M:%S") for pill in day), reverse=True)
+        sorted_day = sorted(day, key = lambda pill: pill['time'], reverse=False) 
+
+        data = { 'name': name, 'pills': sorted_day }
         pillbox.append(data)
     return pillbox

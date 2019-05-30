@@ -4,11 +4,13 @@ from bson.objectid import ObjectId
 from bson.json_util import loads
 from bson.json_util import dumps
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import time
+from datetime import time, date, timedelta
 
 from flaskr.schema import *
 from flaskr.pillbox  import *
 from flaskr.mongodb import *
+
+from datetime import time
 
 from flask import Flask, current_app
 app = Flask(__name__)
@@ -29,6 +31,31 @@ def seed_random_pillbox(username):
   with app.app_context():
     users_db = get_users()
     user = users_db.find_one({'username':username})
-    user['pillbox'][5].append(create_pill_collection(str(time(9, 30, 00)), [ (db.pills.find_one())['_id'], (db.pills.find_one())['_id'] ] ))
-    user['pillbox'][0].append(create_pill_collection(str(time(18, 00, 00)), [ (db.pills.find_one())['_id'] ]))
+
+    user['pillbox'][0].append({
+      'pill_id': (db.pills.find_one())['_id'],
+      'time': str(time(8, 5, 30)),
+    })
+    user['pillbox'][0].append({
+      'pill_id': (db.pills.find_one())['_id'],
+      'time': str(time(10, 0, 00)),
+    })
+    user['pillbox'][0].append({
+      'pill_id': (db.pills.find_one())['_id'],
+      'time': str(time(6, 30, 5)),
+    })
+    
+    user['pillbox'][4].append({
+      'pill_id': (db.pills.find_one())['_id'],
+      'time': str(time(18, 30, 0)),
+    })
+
+    user['pillbox'][6].append({
+      'pill_id': (db.pills.find_one())['_id'],
+      'time': str(time(6, 30, 0)),
+    })
+    user['pillbox'][6].append({
+      'pill_id': (db.pills.find_one())['_id'],
+      'time': str(time(6, 30, 0)),
+    })
     users_db.replace_one( {'_id':user['_id']} , user)

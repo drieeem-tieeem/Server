@@ -4,13 +4,14 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
+from flaskr.pillbox import join_pillbox
 from flaskr.mongodb import get_db, get_users, get_pills
 from flaskr.schema import days_of_the_week
 import json
 from bson.objectid import ObjectId
 
 
-#user_id_str = '5cc956a49a161a065410a707'
+user_id_str = '5cc956a49a161a065410a707'
 bp = Blueprint('api', __name__, url_prefix='/api')
 
 @bp.route('/test', methods=['POST'])
@@ -56,6 +57,14 @@ def get_pill(name):
     else:
         return str("ERROR: Pill does not exists")
 
+@bp.route('/get-pills', methods=['GET'])
+def get_all_pills():
+    pills = get_pills().find()
+    result = ""
+    for pill in pills:
+        result += str(pill) + "\n"
+    return result
+
 @bp.route('/delete-pill/<name>', methods=['GET'])
 def delete_pill(name):
     exists = get_pills().find_one( {'name':name} )
@@ -64,3 +73,11 @@ def delete_pill(name):
         return str(exists)
     else:
         return str("ERROR: Pill does not exists")
+
+@bp.route('/pillbox', methods=['GET'])
+def get_pillbox():
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    pillbox_joined = join_pillbox(pillbox_list, days_of_the_week)
+    return str(pillbox_joined)
+

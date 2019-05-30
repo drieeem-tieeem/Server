@@ -14,11 +14,10 @@
   {% endfor %}
   {% for box in pillbox %}
     <div class="grid-item">
-      {% for collection in box['pills'] %}
-        {% for pill in collection.pills %}
+      {% for pill in box['pills'] %}
         <div class="row">
           <p class="timelabel">
-            {{ collection.time }}
+            {{ pill.time }}
           </p>
           <div>
               <div class="column" style="float: left;">
@@ -26,7 +25,6 @@
               </div>
           </div>
         </div>
-        {% endfor %}
       {% endfor %}
       <p> </p>
     </div>
