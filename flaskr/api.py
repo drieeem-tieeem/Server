@@ -13,8 +13,8 @@ from bson.objectid import ObjectId
 
 from datetime import datetime, date, time, timedelta
 
-#user_id_str = '5cc956a49a161a065410a707'
-user_id_str = str(get_users().find_one()['_id'])
+user_id_str = '5cc956a49a161a065410a707'
+#user_id_str = str(get_users().find_one()['_id'])
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
