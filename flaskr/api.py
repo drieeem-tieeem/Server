@@ -21,6 +21,7 @@ def seed_user():
     username = 'curtis'
     user = get_users().find_one({'username': username})
     if not user:
+        user = {}
         user['_id'] = ObjectId(user_id_str)
         user['username'] = username
         user['password'] = 'pbkdf2:sha256:150000$jkwApNq5$6f2ee74568769791931a005c506afb2e585266373065a7f843977b9cdff38bad'
