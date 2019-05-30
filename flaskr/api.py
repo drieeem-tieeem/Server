@@ -10,6 +10,7 @@ from flaskr.schema import days_of_the_week
 import json
 from bson.objectid import ObjectId
 
+from datetime import datetime, date, time, timedelta
 
 user_id_str = '5cc956a49a161a065410a707'
 bp = Blueprint('api', __name__, url_prefix='/api')
@@ -78,6 +79,99 @@ def delete_pill(name):
 def get_pillbox():
     user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
     pillbox_list = user_profile['pillbox']
-    pillbox_joined = join_pillbox(pillbox_list, days_of_the_week)
-    return str(pillbox_joined)
+    
+    pillbox = []
+    for day in range(7):
+        day = pillbox_list[day]
+        for index, pill in enumerate(day):
+            pill_obj = get_pills().find_one( pill['pill_id'] )
+            pill_obj['time'] = pill['time']
+            day[index] = pill_obj
+        sorted_day = sorted(day, key = lambda pill: pill['time'], reverse=False)
+        pillbox.append(sorted_day)
 
+    return str(pillbox)
+
+@bp.route('/pillbox/simple', methods=['GET'])
+def get_pillbox_simple():
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    
+    pillbox = []
+    for day in range(7):
+        day = pillbox_list[day]
+        for index, pill in enumerate(day):
+            pill_obj = get_pills().find_one( pill['pill_id'] )
+            stripped_pill = {
+                'time': pill['time'],
+                'name': pill_obj['name']
+            }
+            day[index] = stripped_pill
+        sorted_day = sorted(day, key = lambda pill: pill['time'], reverse=False)
+        pillbox.append(sorted_day)
+
+    return str(pillbox)
+
+@bp.route('/pillbox/timesheet', methods=['GET'])
+def get_pillbox_timesheet():
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    pillbox = []
+    for day in range(7):
+        day = pillbox_list[day]
+        day_collections = {}
+        for index, pill in enumerate(day):
+            pill_obj = get_pills().find_one( pill['pill_id'] )
+            time = pill['time']
+            name = pill_obj['name']
+            if time in day_collections:
+                day_collections[time].append(name)
+            else:
+                day_collections[time] = [name]
+        pillbox.append(day_collections)
+
+    return str(pillbox)
+
+@bp.route('/pillbox/set', methods=['GET'])
+def set_taken_auto():
+
+    current_datetime = datetime.now()
+    current_time = current_datetime.time()
+    current_day = current_datetime.weekday()
+    current_week_start = current_datetime.date() - timedelta(current_day)
+
+    current_hour_str = current_datetime.strftime("%H:%M:%S")
+
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    for day_index in range(current_day):
+        day = pillbox_list[day_index]
+        for pill_index, pill in enumerate(day):
+
+            pill_time = datetime.strptime(pill['time'], "%H:%M:%S").time()
+
+            if pill_time < current_time:
+                pill['taken'] = True
+            day[pill_index] = pill
+    
+    get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
+
+    result = ""
+    for item in pillbox_list:
+        result += str(item) + "\n"
+    return "CURRENT DAY: " + str(current_day) + " TIME: " + current_hour_str + "\n\n" + result
+
+
+@bp.route('/pillbox/reset', methods=['GET'])
+def reset_taken():
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    for day in pillbox_list:
+        for pill_index, pill in enumerate(day):
+            if 'taken' in pill and pill['taken']:
+                pill.pop('taken', None)
+                day[pill_index] = pill
+
+    get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
+
+    return "User " + user_profile['username'] + "'s pillbox has been reset."
