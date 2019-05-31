@@ -152,7 +152,6 @@ def get_pillbox_timesheet():
 
 @bp.route('/pillbox/<day_index>', methods=['GET'])
 def get_pillbox_day(day_index):
-    
     try:
         day_index = int(day_index)
         if day_index not in range(7):
@@ -225,6 +224,31 @@ def reset_taken():
     get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
 
     return "User " + user_profile['username'] + "'s pillbox has been reset."
+
+@bp.route('/pilltimes/today', methods=['GET'])
+def get_pilltimes_today():
+    current_datetime = datetime.now()
+    day_index = (current_datetime.weekday() + 1) % 7
+    return get_pilltimes(day_index)
+
+@bp.route('/pilltimes/<day_index>', methods=['GET'])
+def get_pilltimes(day_index):
+    try:
+        day_index = int(day_index)
+        if day_index not in range(7):
+            return "ERROR: invalid day."
+    except:
+        return "ERROR: invalid day."
+        
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    time_list = []
+    for pill in pillbox_list[day_index]:
+        time = pill['time']
+        if time not in time_list:
+            time_list.append(time)
+
+    return str(time_list)
 
 
 @bp.route('/schedule/add', methods=['POST'])
