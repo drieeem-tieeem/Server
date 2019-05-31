@@ -195,18 +195,18 @@ def reset_taken():
     return "User " + user_profile['username'] + "'s pillbox has been reset."
 
 
-@bp.route('/pillbox/schedule/add', methods=['POST'])
+@bp.route('/schedule/add', methods=['POST'])
 def schedule_add():
     data = request.form
     # do error checking
-    if data['name']: 
+    if 'name' in data and data['name']: 
         pill_name = data.getlist('name')[0]
         pill = get_pills().find_one({ 'name' : pill_name })
         if not pill:
             return "ERROR: Pill not found."
     else:
         return "ERROR: No pill specified."
-    if data['day']: 
+    if 'day' in data and data['day']: 
         pill['day'] = data.getlist('day')[0]
         try:
             pill['day'] = int(pill['day'])
@@ -214,7 +214,7 @@ def schedule_add():
             return "ERROR: Incorrect day specification."
     else:
         return "ERROR: No day specified."
-    if data['time']: 
+    if 'time' in data and data['time']: 
         pill['time'] = data.getlist('time')[0]
         try:
             datetime.strptime(pill['time'], "%H:%M:%S").time()
