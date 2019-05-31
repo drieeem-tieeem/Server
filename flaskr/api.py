@@ -150,12 +150,44 @@ def get_pillbox_timesheet():
 
     return str(pillbox)
 
+@bp.route('/pillbox/<day_index>', methods=['GET'])
+def get_pillbox_day(day_index):
+    
+    try:
+        day_index = int(day_index)
+        if day_index not in range(7):
+            return "ERROR: invalid day."
+    except:
+        return "ERROR: invalid day."
+        
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    day = pillbox_list[day_index]
+
+    day_collection = {}
+    for index, pill in enumerate(day):
+        pill_obj = get_pills().find_one( pill['pill_id'] )
+        time = pill['time']
+        name = pill_obj['name']
+        if time in day_collection:
+            day_collection[time].append(name)
+        else:
+            day_collection[time] = [name]
+
+    return str(day_collection)
+
+@bp.route('/pillbox/today', methods=['GET'])
+def get_pillbox_today():
+    current_datetime = datetime.now()
+    day_index = (current_datetime.weekday() + 1) % 7
+    return get_pillbox_day(day_index)
+
 @bp.route('/pillbox/set', methods=['GET'])
 def set_taken_auto():
 
     current_datetime = datetime.now()
     current_time = current_datetime.time()
-    current_day = current_datetime.weekday()
+    current_day = (current_datetime.weekday() + 1) % 7
     current_week_start = current_datetime.date() - timedelta(current_day)
 
     current_hour_str = current_datetime.strftime("%H:%M:%S")
