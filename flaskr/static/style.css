@@ -9,15 +9,17 @@ ul {
   padding: 0;
   overflow: hidden;
   background-color: white;
-  position: fixed;
+  position: -webkit-sticky; /* Safari */
+  position: sticky; /*was fixed */
   top: 5vh;
+  z-index: 2;
   width: 95%;
   left: 2.5%;
 }
 
 li {
   float: left;
-  width: 25%;
+  width: 33%;
   padding: 10px 0;
   text-align: center;
 }
@@ -180,7 +182,7 @@ p.timelabel {
 
 }
 
-input[type=submit]{
+#submitquiz input[type=submit]{
   background-color: white;
   border: none;
   color: powderblue;
@@ -276,12 +278,19 @@ input[type=submit]{
 /* new pill popup */
 
 #contactForm body {
-  margin: 0;
+  margin: 5px;
   padding: 0;
   background: #333;
   font-size: 11px;
+
 }
-#contactForm h1{ margin: 0; }
+#contactForm h1{
+  margin: 5px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: white;
+}
+
 #contact {
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
@@ -301,10 +310,11 @@ input[type=submit]{
 #contactForm {
   display: none;
 
-  padding: 2em;
+  padding: 4em;
   width: 400px;
+  height: 450px;
   text-align: center;
-  background: #fff;
+  background: #9dd8e0;
   position: fixed;
   top:50%;
   left:50%;
@@ -326,13 +336,39 @@ input, textarea {
 textarea { height: 80px; resize: none; }
 
 .formBtn {
-  width: 140px;
+  width: 120px;
   display: inline-block;
-
-  background: transparent;
-  color: #fff;
-  font-weight: 100;
+  background: white;
+  color: #76c9d4;
+  font-weight: bolder;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   font-size: 1.2em;
-  border: none;
-  height: 30px;
+  border: 0;
+  margin: 10px;
+  height: 35px;
+}
+
+/* drag and drop pill shape thing */
+
+.select-style {
+    border: 1px solid #ccc;
+    width: 100%;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
 }

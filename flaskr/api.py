@@ -6,7 +6,7 @@ from werkzeug.exceptions import abort
 from flaskr.auth import login_required
 from flaskr.pillbox import join_pillbox
 from flaskr.mongodb import get_db, get_users, get_pills
-from flaskr.schema import days_of_the_week
+from flaskr.schema import days_of_the_week, pillbox_template
 from test import update_users_schema, seed_random_pillbox
 import json
 from bson.objectid import ObjectId
@@ -54,11 +54,11 @@ def create_pill():
     pill = {}
     data = request.form
 
-    if data['name']: pill['name'] = data.getlist('name')[0]
+    if 'name' in data and data['name']: pill['name'] = data.getlist('name')[0]
     else: pill['name'] = 'Unknown Pill'
-    if data['description']: pill['description'] = data.getlist('description')[0]
+    if 'description' in data and data['description']: pill['description'] = data.getlist('description')[0]
     else: pill['description'] = 'No Description'
-    if data['icon']: pill['icon'] = data.getlist('icon')[0]
+    if 'icon' in data and data['icon']: pill['icon'] = data.getlist('icon')[0]
     else: pill['icon'] = 'icons/pill.png'
 
     duplicate = get_pills().find_one( {'name':pill['name']} )
@@ -248,46 +248,115 @@ def get_pilltimes(day_index):
         if time not in time_list:
             time_list.append(time)
 
+    time_list = sorted(time_list, key = lambda time: time, reverse=False) 
+    
     return str(time_list)
 
 
-@bp.route('/schedule/add', methods=['POST'])
-def schedule_add():
-    data = request.form
+def schedule_error_check(data):
+    pill = {}
     # do error checking
     if 'name' in data and data['name']: 
         pill_name = data.getlist('name')[0]
-        pill = get_pills().find_one({ 'name' : pill_name })
-        if not pill:
-            return "ERROR: Pill not found."
+        pill_obj = get_pills().find_one({ 'name' : pill_name })
+        if not pill_obj:
+            return False, "ERROR: Pill not found.", pill
+        pill['name'] = pill_obj['name']
+        pill['pill_id'] = pill_obj['_id']
     else:
-        return "ERROR: No pill specified."
+        return False, "ERROR: No pill specified.", pill
     if 'day' in data and data['day']: 
         pill['day'] = data.getlist('day')[0]
         try:
             pill['day'] = int(pill['day'])
         except:
-            return "ERROR: Incorrect day specification."
+            return False, "ERROR: Incorrect day specification.", pill
     else:
-        return "ERROR: No day specified."
+        return False, "ERROR: No day specified.", pill
     if 'time' in data and data['time']: 
         pill['time'] = data.getlist('time')[0]
         try:
             datetime.strptime(pill['time'], "%H:%M:%S").time()
         except:
-            return "ERROR: Incorrect time specification."
+            return False, "ERROR: Incorrect time specification.", pill
     else:
-        return "ERROR: No time specified."
-    
+        return False, "ERROR: No time specified.", pill
+        
+    return True, str(pill['pill_id']), pill
+
+@bp.route('/schedule/add', methods=['POST'])
+def schedule_add():
+    data = request.form
+    success, result, pill = schedule_error_check(data)
+    if not success:
+        return result
+
+    pill_day_index = pill['day']
+    pill_name = pill['name']
+    pill.pop('day', None)
+    pill.pop('name', None)
+
     #add to pillbox
     user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
     pillbox_list = user_profile['pillbox']
-    day_index = pill['day']
-    day = pillbox_list[day_index]
-    pill.pop('day', None)
+    day = pillbox_list[pill_day_index]
     day.append(pill)
-    pillbox_list[day_index] = day
+    pillbox_list[pill_day_index] = day
     get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
 
-    return "Successfully added " + pill_name + " on day " + day_index + " at " + pill['time']
+    return "Successfully added " + pill_name + " on day " + str(pill_day_index) + " at " + pill['time']
+
+
+@bp.route('/schedule/remove', methods=['POST'])
+def schedule_remove():
+    data = request.form
+    success, result, pill = schedule_error_check(data)
+    if not success:
+        return result
+
+    pill_day_index = pill['day']
+    pill_name = pill['name']
+    pill.pop('day', None)
+    pill.pop('name', None)
+
+    #remove from pillbox
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    day = pillbox_list[pill_day_index]
     
+    found = False
+    for index, possiblity in enumerate(day):
+        if possiblity['pill_id'] == pill['pill_id'] and possiblity['time'] == pill['time']:
+            day.pop(index)
+            found = True
+    
+    pillbox_list[pill_day_index] = day
+    get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
+    
+    if found:
+        return 'Success'
+    else:
+        return 'No pill with these parameters was found.'
+
+@bp.route('/schedule/clear/<day_index>', methods=['GET'])
+def schedule_clear_day(day_index):
+    try:
+        day_index = int(day_index)
+        if day_index not in range(7):
+            return "ERROR: invalid day."
+    except:
+        return "ERROR: invalid day."
+        
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    pillbox_list[day_index] = []
+    get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
+
+    return "Successfully cleared day " + str(day_index) + "."
+
+@bp.route('/schedule/clear', methods=['GET'])
+def schedule_clear_all():
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_template}})
+
+    return "Successfully cleared entire schedule"

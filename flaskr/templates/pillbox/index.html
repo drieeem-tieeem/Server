@@ -16,13 +16,11 @@
     <div class="grid-item">
       {% for pill in box['pills'] %}
         <div class="row">
+          <div class="column" style="float: left;">
           <p class="timelabel">
             {{ pill.time }}
+            <img src =" {{ url_for('static', filename=pill.icon) }}" class="image movable">
           </p>
-          <div>
-              <div class="column" style="float: left;">
-                <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable">
-              </div>
           </div>
         </div>
       {% endfor %}
