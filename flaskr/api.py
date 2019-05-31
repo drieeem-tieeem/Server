@@ -13,7 +13,7 @@ from bson.objectid import ObjectId
 
 from datetime import datetime, date, time, timedelta
 
-user_id_str = '5cc956a49a161a065410a707'
+user_id_str = '5cc956a49a161a065410a707'    # hardcoded for now
 #user_id_str = str(get_users().find_one()['_id'])
 
 bp = Blueprint('api', __name__, url_prefix='/api')
@@ -48,7 +48,7 @@ def test():
 def test_url(name):
     return name
 
-@bp.route('/create-pill', methods=['POST'])
+@bp.route('/pills/create', methods=['POST'])
 def create_pill():
     #user_id = session.get('user_id')
     pill = {}
@@ -68,7 +68,7 @@ def create_pill():
         get_pills().insert(pill)
         return str(pill)
 
-@bp.route('/get-pill/<name>', methods=['GET'])
+@bp.route('/pills/<name>', methods=['GET'])
 def get_pill(name):
     exists = get_pills().find_one( {'name':name} )
     if exists:
@@ -76,7 +76,7 @@ def get_pill(name):
     else:
         return str("ERROR: Pill does not exists")
 
-@bp.route('/get-pills', methods=['GET'])
+@bp.route('/pills', methods=['GET'])
 def get_all_pills():
     pills = get_pills().find()
     result = ""
@@ -84,7 +84,7 @@ def get_all_pills():
         result += str(pill) + "\n"
     return result
 
-@bp.route('/delete-pill/<name>', methods=['GET'])
+@bp.route('/pills/delete/<name>', methods=['GET'])
 def delete_pill(name):
     exists = get_pills().find_one( {'name':name} )
     if exists:
@@ -193,3 +193,45 @@ def reset_taken():
     get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
 
     return "User " + user_profile['username'] + "'s pillbox has been reset."
+
+
+@bp.route('/pillbox/schedule/add', methods=['POST'])
+def schedule_add():
+    data = request.form
+    # do error checking
+    if data['name']: 
+        pill_name = data.getlist('name')[0]
+        pill = get_pills().find_one({ 'name' : pill_name })
+        if not pill:
+            return "ERROR: Pill not found."
+    else:
+        return "ERROR: No pill specified."
+    if data['day']: 
+        pill['day'] = data.getlist('day')[0]
+        try:
+            pill['day'] = int(pill['day'])
+        except:
+            return "ERROR: Incorrect day specification."
+    else:
+        return "ERROR: No day specified."
+    if data['time']: 
+        pill['time'] = data.getlist('time')[0]
+        try:
+            datetime.strptime(pill['time'], "%H:%M:%S").time()
+        except:
+            return "ERROR: Incorrect time specification."
+    else:
+        return "ERROR: No time specified."
+    
+    #add to pillbox
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    day_index = pill['day']
+    day = pillbox_list[day_index]
+    pill.pop('day', None)
+    day.append(pill)
+    pillbox_list[day_index] = day
+    get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
+
+    return "Successfully added " + pill_name + " on day " + day_index + " at " + pill['time']
+    
