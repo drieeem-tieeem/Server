@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, session
+    Blueprint, flash, g, redirect, render_template, request, url_for, session, Response
 )
 from werkzeug.exceptions import abort
 
@@ -266,7 +266,7 @@ def get_pilltimes_today(single=False):
 @bp.route('/pilltimes/now', methods=['GET'])
 @bp.route('/pilltimes/next', methods=['GET'])
 def get_pilltimes_next():
-    return get_pilltimes_today(single=True)
+    return Response(get_pilltimes_today(single=True), mimetype='text/json')
 
 def schedule_error_check(data):
     pill = {}

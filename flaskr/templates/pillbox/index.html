@@ -99,40 +99,15 @@
 <script type="text/javascript" src="{{ url_for('static', filename='javascript/selectonebox.js') }}"></script>
 
 <div class="pill-container">
-  {% for box in pillbox %}
-    <div class="grid-item">
-      <p> {{ box.name }} </p>
-      <hr>
-    </div>
-  {% endfor %}
+  {% for pill in pill_collection %}
     <div class ="grid-content">
       <h6>
-        <img src ="images/sinemet_white.png" style ="align: left">
+        <img src ="{{ url_for('static', filename=pill.icon) }}" style ="align: left">
         <br>
-        SINEMET
-     </h6>
+        {{ pill.name }}
+    </h6>
     </div>
-    <div class="grid-content">
-      <h6>
-        <img src ="images/tasmar_white.png" style ="align: left">
-        <br>
-        TASMAR
-      </h6>
-    </div>
-    <div class="grid-content">
-      <h6>
-        <img src ="images/mirapex_white.png" style ="align: left">
-        <br>
-        MIRAPEX
-      </h6>
-    </div>
-    <div class="grid-content">
-      <h6>
-        <img src ="images/azilect_white.png" style ="align: left">
-        <br>
-        AZILECT
-      </h6>
-    </div>
-  </div>
+  {% endfor %}
+</div>
 
 {% endblock %}
