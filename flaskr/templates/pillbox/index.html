@@ -29,7 +29,7 @@
         <p class="timelabel">
           {{ pill.time }}
           {% if 'taken' in pill %}
-            <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable" style="opacity: 0.4;">
+            <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable" style="opacity: 0.3;">
           {% else %}
             <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable">
           {% endif %}
