@@ -30,7 +30,11 @@
         <div class="column">
         <p class="timelabel">
           {{ pill.time }}
-          <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable">
+          {% if 'taken' in pill %}
+            <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable" style="opacity: 0.4;">
+          {% else %}
+            <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable">
+          {% endif %}
         </p>
         </div>
       </div>

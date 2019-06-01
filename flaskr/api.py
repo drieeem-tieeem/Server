@@ -192,22 +192,29 @@ def set_taken_auto():
     current_datetime = datetime.now()
     current_time = current_datetime.time()
     current_day = (current_datetime.weekday() + 1) % 7
+    current_month = current_datetime.month
+    current_year = current_datetime.year
+    print(str(current_month) + " " + str(current_year))
     current_week_start = current_datetime.date() - timedelta(current_day)
 
     current_hour_str = current_datetime.strftime("%H:%M:%S")
 
     user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
     pillbox_list = user_profile['pillbox']
-    for day_index in range(current_day):
+
+    for day_index in range(0, current_day+1):
         day = pillbox_list[day_index]
         for pill_index, pill in enumerate(day):
+            datestring = str(current_week_start.year)+"|"+str(current_week_start.month)+"|"+str(current_week_start.day)+"|"
+            pill_datetime = datetime.strptime(datestring+pill['time'], "%Y|%m|%d|%H:%M:%S")
+            pill_datetime += timedelta(days = day_index)
 
-            pill_time = datetime.strptime(pill['time'], "%H:%M:%S").time()
-
-            if pill_time < current_time:
+            print(str(pill_datetime) + "<" + str(current_datetime))
+            if pill_datetime < current_datetime:
                 pill['taken'] = True
             day[pill_index] = pill
-    
+        pillbox_list[day_index] = day
+        
     get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
 
     result = ""

@@ -75,6 +75,8 @@ def join_pillbox(pillbox_list, days=days_of_the_week):
         for index, pill in enumerate(day):
             pill_obj = db['pills'].find_one( pill['pill_id'] )
             pill_obj['time'] = pill['time']
+            if 'taken' in pill:
+                pill_obj['taken'] = pill['taken']
             day[index] = pill_obj
 
         #sorted_day = sorted( (time.strptime(pill['time'], "%H:%M:%S") for pill in day), reverse=True)
