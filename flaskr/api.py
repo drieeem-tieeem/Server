@@ -328,12 +328,12 @@ def schedule_add():
     get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
 
     #return "Successfully added " + pill_name + " on day " + str(pill_day_index) + " at " + pill['time']
-    redirect(url_for('pillbox'), code=200)
+    return redirect(url_for('pillbox.index'), code=302)
 
 @bp.route('/schedule/add/redirect', methods=['POST'])
 def schedule_add_redirect():
     schedule_add()
-    return redirect(url_for('pillbox'), code=200)
+    return redirect(url_for('pillbox.index'), code=302)
 
 @bp.route('/schedule/remove', methods=['POST'])
 def schedule_remove():
