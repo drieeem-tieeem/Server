@@ -28,7 +28,7 @@ def index():
 
         pill_collection = db['pills'].find()
 
-        the_path = os.path.join(APP_STATIC, 'img/')
+        the_path = os.path.join(APP_STATIC, 'img/newpill')
         try:
             files = os.listdir(the_path)
         except:

@@ -43,6 +43,7 @@
 <script src="{{ url_for('static', filename='javascript/dragula.js') }}"></script>
 <script src="{{ url_for('static', filename='javascript/draganddrop.js') }}"></script>
 
+
 <div class = "newpill" style="float: right;">
   <div id="newpill_popup">
     <img src="{{ url_for('static', filename='images/newpill.png') }}" style ="align: right">
@@ -60,7 +61,7 @@
         <input type = "text" list = "icon-types" name="icon"> 
           <datalist id = "icon-types">
             {% for file in files %}
-              <option value="img/{{ file }}"></option>
+              <option value="img/newpill/{{ file }}"></option>
             {% endfor %}
           </datalist>
       </div>
@@ -76,13 +77,21 @@
 <script type="text/javascript" src="{{ url_for('static', filename='javascript/newpill.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='javascript/selectonebox.js') }}"></script>
 
+
 <div class="pill-container">
+ 
   {% for pill in pill_collection %}
     <div class ="grid-content">
-      <h6 align='center'>
-        <img class = "pill_form_image" id="pillform-{{ pill.name }}-image" src ="{{ url_for('static', filename=pill.icon) }}" style ="align: left">
-        <br>
-        {{ pill.name }}
+      <h6 align='left'>
+        
+        <div id="pillform-{{ pill.name }}-image" class="pill_form_image_parent">
+            <img class = "pill_form_image" src ="{{ url_for('static', filename=pill.icon) }}" >
+            <img class = "pill_form_add" src ="{{ url_for('static', filename='img/add.png') }}" >
+        </div>
+        <div>
+            {{ pill.name }}
+        </div>
+
     </h6>
     </div>
 

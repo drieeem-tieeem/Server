@@ -498,3 +498,19 @@ textarea { height: 80px; resize: none; }
   background: #76c9d4;
   color: #ffffff;
 }
+
+.pill_form_image_parent {
+  position: relative;
+  width: 100px;
+  height: 50px;
+}
+.pill_form_image {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+.pill_form_add {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
