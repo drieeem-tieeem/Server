@@ -21,7 +21,7 @@
   <div class="grid-item draggable">
     {% for pill in box['pills'] %}
       <div class="row">
-        <div class="column" style="float: left;">
+        <div class="column">
         <p class="timelabel">
           {{ pill.time }}
           <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable">
@@ -38,12 +38,12 @@
 <script src="{{ url_for('static', filename='javascript/draganddrop.js') }}"></script>
 
 <div class = "newpill" style="float: right;">
-  <div id="contact">
+  <div id="newpill_popup">
     <img src="{{ url_for('static', filename='images/newpill.png') }}" style ="align: right">
     New Pill
   </div>
 
-  <div id="contactForm">
+  <div id="newpill_form">
     <h1>New Pill</h1>
     <form action="{{ url_for('api.create_pill') }}" method="post">
       <h6> Pill name: </h6>
@@ -74,11 +74,65 @@
   {% for pill in pill_collection %}
     <div class ="grid-content">
       <h6 align='center'>
-        <img src ="{{ url_for('static', filename=pill.icon) }}" style ="align: left">
+        <img class = "pill_form_image" src ="{{ url_for('static', filename=pill.icon) }}" style ="align: left">
         <br>
         {{ pill.name }}
     </h6>
     </div>
+
+    <div class = "pill_form" id="pillform-{{ pill.name }}">
+        <!-- <a class="close" href="/pill.ht-ml">×</a> -->
+  
+        <h1 id='pill-{{ pill.name }}'>{{ pill.name }}</h1>
+  
+        <form action="#">
+  
+          <h6> Pill compartment: </h6>
+          <div class="check-selector">
+            <input type="checkbox" class ="check" id="one"/>
+            <label for="one">1</label>
+            <input type="checkbox" class ="check" id="two"/>
+            <label for="two">2</label>
+            <input type="checkbox" class ="check" id="three"/>
+            <label for="three">3</label>
+            <input type="checkbox" class ="check" id="four"/>
+            <label for="four">4</label>
+            <input type="checkbox" class ="check" id="five"/>
+            <label for="five">5</label>
+          </div>
+          <h6> Dosage Days: </h6>
+          <div class="check-selector">
+            <input type="checkbox" id="weekday-mon" class="weekday" />
+            <label for="weekday-mon">M</label>
+            <input type="checkbox" id="weekday-tue" class="weekday" />
+            <label for="weekday-tue">T</label>
+            <input type="checkbox" id="weekday-wed" class="weekday" />
+            <label for="weekday-wed">W</label>
+            <input type="checkbox" id="weekday-thu" class="weekday" />
+            <label for="weekday-thu">Th</label>
+            <input type="checkbox" id="weekday-fri" class="weekday" />
+            <label for="weekday-fri">F</label>
+            <input type="checkbox" id="weekday-sat" class="weekday" />
+            <label for="weekday-sat">S</label>
+            <input type="checkbox" id="weekday-sun" class="weekday" />
+            <label for="weekday-sun">Su</label>
+          </div>
+          <h6> Time of dosage: </h6>
+          <div class ="time">
+            <input placeholder="Hour" id = "time" type="text" required />
+            <input placeholder="Minute"  id = "time" type = "text" required />
+            <div class = "select-style" id = "time">
+              <select name="AM/PM">
+                <option value="AM">A.M.</option>
+                <option value="PM">P.M.</option>
+              </select required />
+            </div>
+          </div>
+          <input placeholder="Additional Comments" type="text "/>
+          <input class="formBtn" type="submit" /><input class="formBtn" type="reset" />
+        </form>
+      </div>
+
   {% endfor %}
 </div>
 

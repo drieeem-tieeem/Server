@@ -71,7 +71,7 @@ def create_pill():
         return str("ERROR: Pill already exists")
     else:
         get_pills().insert(pill)
-        return str(pill)
+        return redirect(url_for('pillbox.index'), code=302)
 
 @bp.route('/pills/<name>', methods=['GET'])
 def get_pill(name):
@@ -245,15 +245,22 @@ def get_pilltimes(day_index, single=False):
     for pill in pillbox_list[day_index]:
         time = pill['time']
         if time not in time_list:
-            time_list.append(time)
+            pill_obj = get_pills().find_one({ '_id' : pill['pill_id'] })
+            pill['name'] = pill_obj['name']
+            if 'taken' in pill_obj and pill_obj['taken']:
+                pill['taken'] = True
+            else:
+                pill['taken'] = False
+            #time_list.append(time)
+            time_list.append(pill)
 
-    time_list = sorted(time_list, key = lambda time: time, reverse=False)
+    pill_list = sorted(time_list, key = lambda pill: pill['time'], reverse=False)
     
     if single:
         current_time = datetime.now().time()
-        for index, pill_time in enumerate(time_list):
-            if current_time <= datetime.strptime(pill_time, "%H:%M:%S").time():
-                return str({'time':time_list[index]})
+        for index, pill in enumerate(pill_list):
+            if current_time <= datetime.strptime(pill['time'], "%H:%M:%S").time():
+                return str(pill)
         return "{}"
     else:
         return str(time_list)
@@ -302,7 +309,6 @@ def schedule_error_check(data):
 
 @bp.route('/schedule/add', methods=['POST'])
 def schedule_add():
-    data = request.form
     success, result, pill = schedule_error_check(data)
     if not success:
         return result
@@ -320,8 +326,13 @@ def schedule_add():
     pillbox_list[pill_day_index] = day
     get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
 
-    return "Successfully added " + pill_name + " on day " + str(pill_day_index) + " at " + pill['time']
+    #return "Successfully added " + pill_name + " on day " + str(pill_day_index) + " at " + pill['time']
+    redirect(url_for('pillbox'), code=200)
 
+@bp.route('/schedule/add/redirect', methods=['POST'])
+def schedule_add_redirect():
+    schedule_add(request.form)
+    return redirect(url_for('pillbox'), code=200)
 
 @bp.route('/schedule/remove', methods=['POST'])
 def schedule_remove():
