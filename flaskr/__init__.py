@@ -2,6 +2,10 @@ import os
 
 from flask import Flask
 
+import os
+# __file__ refers to the file settings.py 
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))   # refers to application_top
+APP_STATIC = os.path.join(APP_ROOT, 'static')
 
 def create_app(test_config=None):
     # create and configure the app

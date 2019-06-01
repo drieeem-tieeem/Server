@@ -52,6 +52,7 @@ def test():
 def test_url(name):
     return name
 
+@bp.route('/pills/add', methods=['POST'])
 @bp.route('/pills/create', methods=['POST'])
 def create_pill():
     #user_id = session.get('user_id')

@@ -9,9 +9,10 @@ from flaskr.schema import days_of_the_week
 import json
 from bson.objectid import ObjectId
 import time
+import os
+from flaskr import APP_STATIC
 
 bp = Blueprint('pillbox', __name__)
-
 
 @bp.route('/')
 def index():
@@ -27,7 +28,17 @@ def index():
 
         pill_collection = db['pills'].find()
 
-        return render_template('pillbox/index.html', pillbox=pillbox, pill_collection=pill_collection)
+        the_path = os.path.join(APP_STATIC, 'img/')
+        try:
+            files = os.listdir(the_path)
+        except:
+            files = []
+
+        return render_template('pillbox/index.html', 
+            pillbox=pillbox, 
+            pill_collection=pill_collection, 
+            files=files
+        )
     else:
         return redirect(url_for('auth.login'))
 
