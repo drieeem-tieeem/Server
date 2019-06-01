@@ -446,14 +446,6 @@ textarea { height: 80px; resize: none; }
 
 /* drag and drop pill shape thing */
 
-.meridian {
-  border: 1px solid #ccc;
-  width: 100%;
-  border-radius: 3px;
-  overflow: hidden;
-  background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
-}
-
 .select-style {
     border: 1px solid #ccc;
     width: 100%;

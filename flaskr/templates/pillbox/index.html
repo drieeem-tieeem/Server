@@ -91,7 +91,9 @@
   
         <h1 id='pill-{{ pill.name }}'>{{ pill.name }}</h1>
   
-        <form action="#">
+        <form action="{{ url_for('api.schedule_add_frompage') }}" method="post">
+        <!----<form action="{{ url_for('api.schedule_add_frompage') }}">--->
+          <input name="name" type="text" value="{{ pill.name }}" required hidden/>
   
           <h6> Pill compartment: </h6>
           <div class="check-selector">
@@ -108,31 +110,31 @@
           </div>
           <h6> Dosage Days: </h6>
           <div class="check-selector">
-            <input type="checkbox" id="weekday-mon" class="weekday" />
+            <input type="checkbox" id="weekday-mon" name="1" class="weekday" />
             <label for="weekday-mon">M</label>
-            <input type="checkbox" id="weekday-tue" class="weekday" />
+            <input type="checkbox" id="weekday-tue" name="2" class="weekday" />
             <label for="weekday-tue">T</label>
-            <input type="checkbox" id="weekday-wed" class="weekday" />
+            <input type="checkbox" id="weekday-wed" name="3" class="weekday" />
             <label for="weekday-wed">W</label>
-            <input type="checkbox" id="weekday-thu" class="weekday" />
+            <input type="checkbox" id="weekday-thu" name="4" class="weekday" />
             <label for="weekday-thu">Th</label>
-            <input type="checkbox" id="weekday-fri" class="weekday" />
+            <input type="checkbox" id="weekday-fri" name="5" class="weekday" />
             <label for="weekday-fri">F</label>
-            <input type="checkbox" id="weekday-sat" class="weekday" />
+            <input type="checkbox" id="weekday-sat" name="6" class="weekday" />
             <label for="weekday-sat">S</label>
-            <input type="checkbox" id="weekday-sun" class="weekday" />
+            <input type="checkbox" id="weekday-sun" name="7" class="weekday" />
             <label for="weekday-sun">Su</label>
           </div>
           <h6> Time of dosage: </h6>
           <div class ="time">
-            <input placeholder="Hour" id="time" type="text" required />
-            <input placeholder="Minute"  id="time" type = "text" required />
-            <div class = "select-style" id="time">
-              <select name="AM/PM">
-                <option value="AM">A.M.</option>
-                <option value="PM">P.M.</option>
-              </select required >
-            </div>
+          <input class="time-entry" placeholder="Hour" id="hour" name="hour" type="text" required />
+          <input class="time-entry" placeholder="Minute"  id="minute" name="minute" type = "text" required />
+          <div id="meridian">
+            <select name="meridian">
+              <option value="am">A.M.</option>
+              <option value="pm">P.M.</option>
+            </select required >
+          </div>
           </div>
           <input placeholder="Additional Comments" type="text "/>
           <input class="formBtn" type="submit" /><input class="formBtn" type="reset" />

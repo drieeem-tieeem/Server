@@ -309,8 +309,9 @@ def schedule_error_check(data):
     return True, str(pill['pill_id']), pill
 
 @bp.route('/schedule/add', methods=['POST'])
-def schedule_add():
-    data = request.form
+def schedule_add(data=None):
+    if data == None:
+        data = request.form
     success, result, pill = schedule_error_check(data)
     if not success:
         return result
@@ -331,9 +332,42 @@ def schedule_add():
     #return "Successfully added " + pill_name + " on day " + str(pill_day_index) + " at " + pill['time']
     return redirect(url_for('pillbox.index'), code=302)
 
-@bp.route('/schedule/add/redirect', methods=['POST'])
-def schedule_add_redirect():
-    schedule_add()
+@bp.route('/schedule/addpage', methods=['POST'])
+def schedule_add_frompage():
+    data = request.form
+    hour = data.getlist('hour')[0]
+    minute = data.getlist('minute')[0]
+    meridian = data.getlist('meridian')[0]
+    hour = int(hour)
+    minute = int(minute)
+    if meridian == 'pm':
+        hour = hour + 12
+    
+    
+    hour = "%02d" % hour
+    minute = "%02d" % minute
+
+    name = data.getlist('name')[0]
+
+    pill_obj = get_pills().find_one({ 'name' : name })
+
+    current_datetime = datetime.now()
+    current_day = (current_datetime.weekday() + 1) % 7
+
+    pill = {
+        'pill_id': pill_obj['_id'],
+        'time': hour+":"+minute+":00"
+    }
+
+    #add to pillbox
+    user_profile = get_users().find_one({ '_id': ObjectId(user_id_str) }) #hardcoded user
+    pillbox_list = user_profile['pillbox']
+    day = pillbox_list[current_day]
+    day.append(pill)
+    pillbox_list[current_day] = day
+    get_users().find_one_and_update( {'_id':user_profile['_id']}, {'$set': {'pillbox': pillbox_list}})
+
+    #return "Successfully added " + pill_name + " on day " + str(pill_day_index) + " at " + pill['time']
     return redirect(url_for('pillbox.index'), code=302)
 
 @bp.route('/schedule/remove', methods=['POST'])
