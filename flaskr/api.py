@@ -225,14 +225,8 @@ def reset_taken():
 
     return "User " + user_profile['username'] + "'s pillbox has been reset."
 
-@bp.route('/pilltimes/today', methods=['GET'])
-def get_pilltimes_today():
-    current_datetime = datetime.now()
-    day_index = (current_datetime.weekday() + 1) % 7
-    return get_pilltimes(day_index)
-
 @bp.route('/pilltimes/<day_index>', methods=['GET'])
-def get_pilltimes(day_index):
+def get_pilltimes(day_index, single=False):
     try:
         day_index = int(day_index)
         if day_index not in range(7):
@@ -248,10 +242,27 @@ def get_pilltimes(day_index):
         if time not in time_list:
             time_list.append(time)
 
-    time_list = sorted(time_list, key = lambda time: time, reverse=False) 
+    time_list = sorted(time_list, key = lambda time: time, reverse=False)
     
-    return str(time_list)
+    if single:
+        current_time = datetime.now().time()
+        for index, pill_time in enumerate(time_list):
+            if current_time <= datetime.strptime(pill_time, "%H:%M:%S").time():
+                return str(time_list[index])
+        return "No more alarms for today."
+    else:
+        return str(time_list)
 
+@bp.route('/pilltimes/today', methods=['GET'])
+def get_pilltimes_today(single=False):
+    current_datetime = datetime.now()
+    day_index = (current_datetime.weekday() + 1) % 7
+    return get_pilltimes(day_index, single)
+    
+@bp.route('/pilltimes/now', methods=['GET'])
+@bp.route('/pilltimes/next', methods=['GET'])
+def get_pilltimes_next():
+    return get_pilltimes_today(single=True)
 
 def schedule_error_check(data):
     pill = {}
