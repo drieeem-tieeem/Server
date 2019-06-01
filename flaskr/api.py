@@ -18,6 +18,10 @@ user_id_str = '5cc956a49a161a065410a707'    # hardcoded for now
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
+@bp.route('/')
+def help():
+    return redirect("https://docs.google.com/document/d/1dj5l9ECxeb6rGSHC3TrvGe1i6L9Aw0ETqebiPQ_HobY/edit?usp=sharing", code=302)
+
 @bp.route('/test/seed', methods=['GET'])
 def seed_user():
     username = 'curtis'
