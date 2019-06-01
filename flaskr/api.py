@@ -248,9 +248,9 @@ def get_pilltimes(day_index, single=False):
             pill_obj = get_pills().find_one({ '_id' : pill['pill_id'] })
             pill['name'] = pill_obj['name']
             if 'taken' in pill_obj and pill_obj['taken']:
-                pill['taken'] = True
+                pill['taken'] = 1
             else:
-                pill['taken'] = False
+                pill['taken'] = 0
             #time_list.append(time)
             time_list.append(pill)
 

@@ -74,7 +74,7 @@
   {% for pill in pill_collection %}
     <div class ="grid-content">
       <h6 align='center'>
-        <img class = "pill_form_image" src ="{{ url_for('static', filename=pill.icon) }}" style ="align: left">
+        <img class = "pill_form_image" id="pillform-{{ pill.name }}" src ="{{ url_for('static', filename=pill.icon) }}" style ="align: left">
         <br>
         {{ pill.name }}
     </h6>
@@ -132,7 +132,25 @@
           <input class="formBtn" type="submit" /><input class="formBtn" type="reset" />
         </form>
       </div>
+      <script>
+        $(function() {
 
+        // contact form animations
+        $('.pill_form_image').click(function() {
+          $('.pill_form').fadeToggle();
+        })
+        $(document).mouseup(function (e) {
+          var container = $(".pill_form");
+
+          if (!container.is(e.target) // if the target of the click isn't the container...
+              && container.has(e.target).length === 0) // ... nor a descendant of the container
+          {
+              container.fadeOut();
+          }
+        });
+
+        });
+      </script>
   {% endfor %}
 </div>
 
