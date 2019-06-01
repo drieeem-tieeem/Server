@@ -74,7 +74,7 @@
   {% for pill in pill_collection %}
     <div class ="grid-content">
       <h6 align='center'>
-        <img class = "pill_form_image" id="pillform-{{ pill.name }}" src ="{{ url_for('static', filename=pill.icon) }}" style ="align: left">
+        <img class = "pill_form_image" id="pillform-{{ pill.name }}-image" src ="{{ url_for('static', filename=pill.icon) }}" style ="align: left">
         <br>
         {{ pill.name }}
     </h6>
@@ -119,13 +119,13 @@
           </div>
           <h6> Time of dosage: </h6>
           <div class ="time">
-            <input placeholder="Hour" id = "time" type="text" required />
-            <input placeholder="Minute"  id = "time" type = "text" required />
-            <div class = "select-style" id = "time">
+            <input placeholder="Hour" id="hour" type="text" required />
+            <input placeholder="Minute"  id="minute" type = "text" required />
+            <div class = "select-style" id="time">
               <select name="AM/PM">
                 <option value="AM">A.M.</option>
                 <option value="PM">P.M.</option>
-              </select required />
+              </select required >
             </div>
           </div>
           <input placeholder="Additional Comments" type="text "/>
@@ -136,11 +136,11 @@
         $(function() {
 
         // contact form animations
-        $('.pill_form_image').click(function() {
-          $('.pill_form').fadeToggle();
+        $('#pillform-{{ pill.name }}-image').click(function() {
+          $('#pillform-{{ pill.name }}').fadeToggle();
         })
         $(document).mouseup(function (e) {
-          var container = $(".pill_form");
+          var container = $("#pillform-{{ pill.name }}");
 
           if (!container.is(e.target) // if the target of the click isn't the container...
               && container.has(e.target).length === 0) // ... nor a descendant of the container
