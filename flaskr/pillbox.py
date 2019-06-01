@@ -25,7 +25,7 @@ def index():
         pillbox_list = user['pillbox']
         pillbox = join_pillbox(pillbox_list)
 
-        pill_collection = db['pills'].find())
+        pill_collection = db['pills'].find()
 
         return render_template('pillbox/index.html', pillbox=pillbox, pill_collection=pill_collection)
     else:
