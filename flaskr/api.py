@@ -252,7 +252,7 @@ def get_pilltimes(day_index, single=False):
         current_time = datetime.now().time()
         for index, pill_time in enumerate(time_list):
             if current_time <= datetime.strptime(pill_time, "%H:%M:%S").time():
-                return str(time_list[index])
+                return str({'time':time_list[index]})
         return "No more alarms for today."
     else:
         return str(time_list)

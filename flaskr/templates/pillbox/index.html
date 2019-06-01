@@ -1,91 +1,138 @@
 {% extends 'base.html' %}
 
+{% block header %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='javascript/newpill.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 <h3> YOUR PILLBOX ! </h3>
   <h4> ★ next dosage: </h4>
 
 
-  <div class="grid-container">
+<div class="grid-container">
+{% for box in pillbox %}
+  <div class="grid-item">
+    <p> {{ box.name }} </p>
+    <hr>
+  </div>
+{% endfor %}
+{% for box in pillbox %}
+  <div class="grid-item draggable">
+    {% for pill in box['pills'] %}
+      <div class="row">
+        <div class="column" style="float: left;">
+        <p class="timelabel">
+          {{ pill.time }}
+          <img src ="{{ url_for('static', filename=pill.icon) }}" class="image movable">
+        </p>
+        </div>
+      </div>
+    {% endfor %}
+    <p> </p>
+  </div>
+
+{% endfor %}
+</div>
+<script src="{{ url_for('static', filename='javascript/dragula.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/draganddrop.js') }}"></script>
+
+<div class = "newpill" style="float: right;">
+  <div id="contact">
+    <img src="{{ url_for('static', filename='images/newpill.png') }}" style ="align: right">
+    New Pill
+  </div>
+
+  <div id="contactForm">
+    <h1>New Pill</h1>
+    <form action="#">
+      <input placeholder="Name" type="text" required />
+
+      <h6> Pill compartment: </h6>
+      <div class="check-selector">
+        <input type="checkbox" class ="check" id="one"/>
+        <label for="one">1</label>
+        <input type="checkbox" class ="check" id="two"/>
+        <label for="two">2</label>
+        <input type="checkbox" class ="check" id="three"/>
+        <label for="three">3</label>
+        <input type="checkbox" class ="check" id="four"/>
+        <label for="four">4</label>
+        <input type="checkbox" class ="check" id="five"/>
+        <label for="five">5</label>
+      </div>
+
+      <h6> Pill shape: </h6>
+      <div class = "select-style">
+        <select name="Shape">
+          <option value="oval">Oval</option>
+          <option value="circle">Circle</option>
+          <option value="rectanguar">Rectangular</option>
+          <option value="split">Split</option>
+        </select required />
+      </div>
+
+      <h6> Dosage Days: </h6>
+      <div class="check-selector">
+        <input type="checkbox" id="weekday-mon" class="weekday" />
+        <label for="weekday-mon">M</label>
+        <input type="checkbox" id="weekday-tue" class="weekday" />
+        <label for="weekday-tue">T</label>
+        <input type="checkbox" id="weekday-wed" class="weekday" />
+        <label for="weekday-wed">W</label>
+        <input type="checkbox" id="weekday-thu" class="weekday" />
+        <label for="weekday-thu">Th</label>
+        <input type="checkbox" id="weekday-fri" class="weekday" />
+        <label for="weekday-fri">F</label>
+        <input type="checkbox" id="weekday-sat" class="weekday" />
+        <label for="weekday-sat">S</label>
+        <input type="checkbox" id="weekday-sun" class="weekday" />
+        <label for="weekday-sun">Su</label>
+      </div>
+      <input placeholder="Time taken" type="text" required />
+      <input placeholder="Comments" type="text "/>
+      <input class="formBtn" type="submit" /><input class="formBtn" type="reset" />
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='javascript/newpill.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='javascript/selectonebox.js') }}"></script>
+
+<div class="pill-container">
   {% for box in pillbox %}
     <div class="grid-item">
       <p> {{ box.name }} </p>
       <hr>
     </div>
   {% endfor %}
-  {% for box in pillbox %}
-    <div class="grid-item">
-      {% for pill in box['pills'] %}
-        <div class="row">
-          <div class="column" style="float: left;">
-          <p class="timelabel">
-            {{ pill.time }}
-            <img src =" {{ url_for('static', filename=pill.icon) }}" class="image movable">
-          </p>
-          </div>
-        </div>
-      {% endfor %}
-      <p> </p>
+    <div class ="grid-content">
+      <h6>
+        <img src ="images/sinemet_white.png" style ="align: left">
+        <br>
+        SINEMET
+     </h6>
     </div>
-
-  {% endfor %}
-  
-  </div>
-
-  <script src="{{ url_for('static', filename='javascript/dragula.js') }}"></script>
-  <script src="{{ url_for('static', filename='javascript/draganddrop.js') }}"></script>
-
-  <div class="pill-container">
-  <div class="grid-content">
-    <h6>
-      <img src ="{{ url_for('static', filename='images/sinemet_white.png') }}" style ="align: left">
-      <br>
-      SINEMET
-   </h6>
-  </div>
-  <div class="grid-content">
-    <h6>
-      <img src ="{{ url_for('static', filename='images/tasmar_white.png') }}" style ="align: left">
-      <br>
-      TASMAR
-    </h6>
-  </div>
-  <div class="grid-content">
-
-  </div>
-  <div class="grid-content">
-    <div id="contact">
-      <img src="{{ url_for('static', filename='images/newpill.png') }}" style ="align: right">
-      New Pill
+    <div class="grid-content">
+      <h6>
+        <img src ="images/tasmar_white.png" style ="align: left">
+        <br>
+        TASMAR
+      </h6>
     </div>
-
-    <div id="contactForm">
-
-      <h1>Add New Pill</h1>
-      <small>I'll get back to you as quickly as possible</small>
-
-      <form action="#">
-        <input placeholder="Name" type="text" required />
-        <input placeholder="Email" type="email" required />
-        <input placeholder="Subject" type="text" required />
-        <textarea placeholder="Comment"></textarea>
-        <input class="formBtn" type="submit" />
-        <input class="formBtn" type="reset" />
-      </form>
+    <div class="grid-content">
+      <h6>
+        <img src ="images/mirapex_white.png" style ="align: left">
+        <br>
+        MIRAPEX
+      </h6>
     </div>
-  </div>
-  <div class="grid-content">
-    <h6>
-      <img src ="{{ url_for('static', filename='images/mirapex_white.png') }}" style ="align: left">
-      <br>
-      MIRAPEX
-    </h6>
-  </div>
-  <div class="grid-content">
-    <h6>
-      <img src ="{{ url_for('static', filename='images/azilect_white.png') }}" style ="align: left">
-      <br>
-      AZILECT
-    </h6>
+    <div class="grid-content">
+      <h6>
+        <img src ="images/azilect_white.png" style ="align: left">
+        <br>
+        AZILECT
+      </h6>
+    </div>
   </div>
 
 {% endblock %}

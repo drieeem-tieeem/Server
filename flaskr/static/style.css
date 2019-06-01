@@ -10,9 +10,8 @@ ul {
   overflow: hidden;
   background-color: white;
   position: -webkit-sticky; /* Safari */
-  position: sticky; /*was fixed */
+  position: fixed;
   top: 5vh;
-  z-index: 2;
   width: 95%;
   left: 2.5%;
 }
@@ -182,7 +181,7 @@ p.timelabel {
 
 }
 
-#submitquiz input[type=submit]{
+.quiz {
   background-color: white;
   border: none;
   color: powderblue;
@@ -206,7 +205,7 @@ p.timelabel {
   left: 2.5%;
   width: 95%;
   height: 25.5%;
-  position: fixed;
+  position: relative; /* was fixed */
   top: 27vh;
   background-color: powderblue;
 }
@@ -229,25 +228,6 @@ p.timelabel {
   width: 100%;
 }
 
-/* Clear floats after image containers */
-/* .row::after {
-  content: "";
-  clear: both;
-  display: table;
-} */
-
-/* .new-pill {
-  display: grid;
-  grid-column-gap: 5px;
-  grid-template-columns: auto;
-  left: 2.5%;
-  width: 95%;
-  height: 10%;
-  position: fixed;
-  top: 85vh;
-  background-color: powderblue;
-} */
-
 /* pills legend */
 
 .pill-container {
@@ -257,8 +237,8 @@ p.timelabel {
   left: 2.5%;
   width: 95%;
   height: 10%;
-  position: fixed;
-  top: 73vh;
+  position: relative; /* was fixed */
+  top: 40vh;
   background-color: powderblue;
 }
 
@@ -277,15 +257,21 @@ p.timelabel {
 
 /* new pill popup */
 
+.newpill {
+  right: 5vh;
+  top: 30vh;
+  position: relative;
+}
+
 #contactForm body {
-  margin: 5px;
+  margin: 0;
   padding: 0;
   background: #333;
   font-size: 11px;
 
 }
 #contactForm h1{
-  margin: 5px;
+  margin-bottom: 5px;
   letter-spacing: 5px;
   text-transform: uppercase;
   color: white;
@@ -310,9 +296,9 @@ p.timelabel {
 #contactForm {
   display: none;
 
-  padding: 4em;
-  width: 400px;
-  height: 450px;
+  padding: 0.5em 4em 0.5em 4em ;
+  width: 420px;
+  height: 460px;
   text-align: center;
   background: #9dd8e0;
   position: fixed;
@@ -336,7 +322,7 @@ input, textarea {
 textarea { height: 80px; resize: none; }
 
 .formBtn {
-  width: 120px;
+  width: 100px;
   display: inline-block;
   background: white;
   color: #76c9d4;
@@ -371,4 +357,27 @@ textarea { height: 80px; resize: none; }
 
 .select-style select:focus {
     outline: none;
+}
+
+/* pill container + weekly doses selection */
+
+.check-selector input {
+  display: none!important;
+}
+
+.check-selector input[type=checkbox] + label {
+  display: inline-block;
+  border-radius: 6px;
+  background: white;
+  height: 40px;
+  width: 30px;
+  margin-right: 3px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.check-selector input[type=checkbox]:checked + label {
+  background: #76c9d4;
+  color: #ffffff;
 }

@@ -2,8 +2,8 @@ $(function() {
 
   // contact form animations
   $('#contact').click(function() {
-    $('#contactForm').fadeToggle();
-  })
+    $('#contactForm').fadeIn();
+  });
   $(document).mouseup(function (e) {
     var container = $("#contactForm");
 
