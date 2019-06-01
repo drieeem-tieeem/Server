@@ -309,6 +309,7 @@ def schedule_error_check(data):
 
 @bp.route('/schedule/add', methods=['POST'])
 def schedule_add():
+    data = request.form
     success, result, pill = schedule_error_check(data)
     if not success:
         return result
@@ -331,7 +332,7 @@ def schedule_add():
 
 @bp.route('/schedule/add/redirect', methods=['POST'])
 def schedule_add_redirect():
-    schedule_add(request.form)
+    schedule_add()
     return redirect(url_for('pillbox'), code=200)
 
 @bp.route('/schedule/remove', methods=['POST'])
