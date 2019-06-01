@@ -268,6 +268,7 @@ def get_pilltimes(day_index, single=False):
         for index, pill in enumerate(pill_list):
             if current_time <= datetime.strptime(pill['time'], "%H:%M:%S").time():
                 pill['time'] = pill['time'][0:5]
+                pill.pop('pill_id', None)
                 return str(pill)
         return "{}"
     else:
